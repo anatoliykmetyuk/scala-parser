@@ -5,15 +5,16 @@ val root = project.in(file(".")).settings(
   version := "0.1.3",
   scalaVersion := "2.11.4",
   crossScalaVersions := Seq("2.11.4", "2.10.5"),
+
   libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.2" % "provided",
   addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.2"),
   autoCompilerPlugins := true,
+
   libraryDependencies ++= Seq(
-    "com.lihaoyi" %% "utest" % "0.3.0",
-    "org.parboiled" %% "parboiled" % "2.1.0"
+    "org.parboiled" %% "parboiled" % "2.1.0",
+    "org.scalatest" %% "scalatest" % "2.2.4"
   ),
-  resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-  testFrameworks += new TestFramework("utest.runner.Framework"),
+  
   publishTo := Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"),
   pomExtra :=
     <url>https://github.com/lihaoyi/scala-parser</url>
