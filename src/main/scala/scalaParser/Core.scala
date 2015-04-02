@@ -8,6 +8,7 @@ abstract class Core extends Parser with syntax.Basic with syntax.Literals with s
   // Aliases for common things. These things are used in almost every parser
   // in the file, so it makes sense to keep them short.
   type R0 = Rule0
+  type RS = Rule1[String]
   /**
    * Parses all whitespace, excluding newlines. This is only
    * really useful in e.g. {} blocks, where we want to avoid
@@ -35,8 +36,8 @@ abstract class Core extends Parser with syntax.Basic with syntax.Literals with s
    * (W) and key-operators (O) which have different non-match criteria.
    */
   object KeyWordOperators {
-    def W(s: String) = rule( WL ~ Key.W(s) )
-    def O(s: String) = rule( WL ~ Key.O(s) )
+    def W(s: String): RS = rule( WL ~ capture(Key.W(s)) )
+    def O(s: String): RS = rule( WL ~ capture(Key.O(s)) )
   }
   import KeyWordOperators._
   // Keywords that match themselves and nothing else
@@ -98,7 +99,7 @@ abstract class Core extends Parser with syntax.Basic with syntax.Literals with s
    */
   def pr(s: String) = rule( run(println(s"LOGGING $cursor: $s")) )
 
-  def Id = rule( WL ~ Identifiers.Id )
+  def Id = rule( WL ~ capture(Identifiers.Id) )
   def VarId = rule( WL ~ Identifiers.VarId )
   def Literal = rule( WL ~ Literals.Literal )
   def Semi = rule( WS ~ Basic.Semi )
@@ -114,10 +115,13 @@ abstract class Core extends Parser with syntax.Basic with syntax.Literals with s
     def ConsumeComments = rule( (WSChar ~ Literals.Comment ~ WSChar ~ Basic.Newline).* )
     rule( WS ~ Basic.Newline.? ~ ConsumeComments ~ NotNewline )
   }
-  def StableId: R0 = {
-    def ClassQualifier = rule( '[' ~ Id ~ ']' )
-    def ThisSuper = rule( `this` | `super` ~ ClassQualifier.? )
-    rule( (Id ~ '.').* ~ ThisSuper ~ ('.' ~ Id).* | Id ~ ('.' ~ Id).* )
-  }
+
+  // TODO: Fix this to be Rule1[String]
+  // 
+  // def StableId: R0 = {
+  //   def ClassQualifier = rule( '[' ~ Id ~ ']' )
+  //   def ThisSuper = rule( `this` | `super` ~ ClassQualifier.? )
+  //   rule( (Id ~ '.').* ~ ThisSuper ~ ('.' ~ Id).* | Id ~ ('.' ~ Id).* )
+  // }
 
 }
