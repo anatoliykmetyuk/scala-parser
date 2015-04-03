@@ -6,6 +6,9 @@ class TypesSpec extends FlatSpec with Matchers with ParserTestsHelper {
 
   behavior of "Types"
 
-  it should "Modifiers -> Strings" in check(_.Mod)("override", "override")
+  it should "Modifiers -> Strings" in {
+    check(_.Mod)("override", "override")
+    check(_.Mod)("private[this]", "private[this]")
+  }
 
 }

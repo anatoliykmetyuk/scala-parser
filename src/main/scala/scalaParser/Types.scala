@@ -7,15 +7,20 @@ trait Types extends Core with RulesOps {
   private implicit def wspStr(s: String) = rule( WL ~ str(s) )
   private implicit def wspCh(s: Char) = rule( WL ~ ch(s) )
 
-  def Mod: RS = rule( LocalMod | AccessMod | `override` )
-  def LocalMod: RS = rule( `abstract` | `final` | `sealed` | `implicit` | `lazy` )
+  def Mod: RS = rule( LocalMod | AccessMod | capture(`override`) )
+  def LocalMod: RS = rule(
+    capture(`abstract`)
+  | capture(`final`)
+  | capture(`sealed`)
+  | capture(`implicit`)
+  | capture(`lazy`)
+  )
   def AccessMod: RS = {
-    def AccessQualifier: RS = rule( capture('[') ~ (`this` | Id) ~> Concat ~ capture(']') ~> Concat )
-    rule( (`private` | `protected`) ~ (AccessQualifier.? ~> ExtractOpt) ~> Concat )
+    def AccessQualifier: RS = rule( capture('[') ~ (capture(`this`) | capture(Id)) ~> Concat ~ capture(']') ~> Concat )
+    rule( (capture(`private`) | capture(`protected`)) ~ (AccessQualifier.? ~> ExtractOpt) ~> Concat )
   }
 
-  /*
-
+/*
   def Dcl: R0 = {
     def VarDcl = rule( `var` ~ Ids ~ `:` ~ Type )
     def FunDcl = rule( `def` ~ FunSig ~ (`:` ~ Type).? )

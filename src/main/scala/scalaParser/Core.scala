@@ -36,8 +36,8 @@ abstract class Core extends Parser with syntax.Basic with syntax.Literals with s
    * (W) and key-operators (O) which have different non-match criteria.
    */
   object KeyWordOperators {
-    def W(s: String): RS = rule( WL ~ capture(Key.W(s)) )
-    def O(s: String): RS = rule( WL ~ capture(Key.O(s)) )
+    def W(s: String) = rule( WL ~ Key.W(s) )
+    def O(s: String) = rule( WL ~ Key.O(s) )
   }
   import KeyWordOperators._
   // Keywords that match themselves and nothing else
@@ -99,7 +99,7 @@ abstract class Core extends Parser with syntax.Basic with syntax.Literals with s
    */
   def pr(s: String) = rule( run(println(s"LOGGING $cursor: $s")) )
 
-  def Id = rule( WL ~ capture(Identifiers.Id) )
+  def Id = rule( WL ~ Identifiers.Id )
   def VarId = rule( WL ~ Identifiers.VarId )
   def Literal = rule( WL ~ Literals.Literal )
   def Semi = rule( WS ~ Basic.Semi )
